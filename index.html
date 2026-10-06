@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SHAN BOT - WhatsApp Pair</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:
+        radial-gradient(circle at top,#123b45 0%,#061015 45%,#020609 100%);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.container{
+    width:100%;
+    max-width:430px;
+}
+
+.card{
+    background:rgba(7,18,23,.95);
+    border:1px solid rgba(0,255,200,.25);
+    border-radius:22px;
+    padding:28px 22px;
+    box-shadow:
+        0 0 35px rgba(0,255,200,.12),
+        inset 0 0 30px rgba(0,255,200,.025);
+    backdrop-filter:blur(12px);
+}
+
+.logo{
+    width:78px;
+    height:78px;
+    margin:0 auto 15px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(135deg,#00ffd0,#0077ff);
+    color:#00110e;
+    font-size:28px;
+    font-weight:900;
+    box-shadow:0 0 30px rgba(0,255,208,.35);
+}
+
+h1{
+    text-align:center;
+    font-size:28px;
+    letter-spacing:1px;
+    margin-bottom:8px;
+}
+
+.subtitle{
+    text-align:center;
+    color:#91aaa9;
+    font-size:14px;
+    margin-bottom:25px;
+}
+
+.status{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    margin-bottom:22px;
+    color:#00ffc8;
+    font-size:13px;
+}
+
+.dot{
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    background:#00ff9d;
+    box-shadow:0 0 12px #00ff9d;
+    animation:blink 1.2s infinite;
+}
+
+@keyframes blink{
+    50%{
+        opacity:.35;
+    }
+}
+
+label{
+    display:block;
+    margin-bottom:8px;
+    color:#b9cecc;
+    font-size:13px;
+}
+
+input{
+    width:100%;
+    padding:15px;
+    border-radius:12px;
+    border:1px solid rgba(0,255,200,.22);
+    outline:none;
+    background:#071217;
+    color:white;
+    font-size:16px;
+    margin-bottom:13px;
+}
+
+input:focus{
+    border-color:#00ffc8;
+    box-shadow:0 0 15px rgba(0,255,200,.12);
+}
+
+button{
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:12px;
+    background:linear-gradient(135deg,#00ffc8,#008cff);
+    color:#00100d;
+    font-weight:900;
+    font-size:15px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+button:hover{
+    transform:translateY(-1px);
+    box-shadow:0 0 22px rgba(0,255,200,.25);
+}
+
+button:disabled{
+    opacity:.55;
+    cursor:not-allowed;
+    transform:none;
+}
+
+.result{
+    display:none;
+    margin-top:22px;
+    padding:18px;
+    border-radius:15px;
+    background:#050d11;
+    border:1px solid rgba(0,255,200,.18);
+    text-align:center;
+}
+
+.result-title{
+    color:#8fa6a4;
+    font-size:12px;
+    margin-bottom:9px;
+}
+
+#pairCode{
+    font-size:25px;
+    font-weight:900;
+    letter-spacing:4px;
+    color:#00ffc8;
+    word-break:break-all;
+}
+
+.message{
+    margin-top:10px;
+    color:#91aaa9;
+    font-size:13px;
+    line-height:1.5;
+}
+
+.server-box{
+    margin-top:20px;
+    padding:12px;
+    border-radius:12px;
+    background:rgba(0,255,200,.035);
+    border:1px solid rgba(0,255,200,.08);
+}
+
+.server-title{
+    font-size:11px;
+    color:#78918f;
+    margin-bottom:5px;
+}
+
+#serverStatus{
+    font-size:13px;
+    color:#00ffc8;
+    word-break:break-all;
+}
+
+footer{
+    text-align:center;
+    margin-top:18px;
+    color:#506866;
+    font-size:11px;
+}
+
+.loading{
+    animation:loading 1s infinite;
+}
+
+@keyframes loading{
+    0%{opacity:.4}
+    50%{opacity:1}
+    100%{opacity:.4}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="card">
+
+    <div class="logo">
+        SB
+    </div>
+
+    <h1>SHAN BOT</h1>
+
+    <div class="subtitle">
+        WhatsApp Pairing Panel
+    </div>
+
+    <div class="status">
+        <span class="dot"></span>
+        <span>SHAN MINI BOT</span>
+    </div>
+
+    <label for="number">
+        WhatsApp Number
+    </label>
+
+    <input
+        type="tel"
+        id="number"
+        placeholder="947XXXXXXXX"
+        autocomplete="off"
+    >
+
+    <button
+        id="pairBtn"
+        onclick="getPairCode()"
+    >
+        GET PAIR CODE
+    </button>
+
+    <div
+        class="result"
+        id="resultBox"
+    >
+
+        <div class="result-title">
+            PAIR CODE
+        </div>
+
+        <div id="pairCode">
+            ----
+        </div>
+
+        <div
+            class="message"
+            id="message"
+        ></div>
+
+    </div>
+
+    <div class="server-box">
+
+        <div class="server-title">
+            SERVER
+        </div>
+
+        <div id="serverStatus">
+            Ready
+        </div>
+
+    </div>
+
+    <footer>
+        SHAN BOT • WhatsApp Pairing
+    </footer>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* ==========================================
+   SHAN BOT SERVER URL
+========================================== */
+
+const BOT_API_URL =
+    "https://kod.publicvm.com/server/ee94eed7";
+
+
+/* ==========================================
+   SERVER STATUS
+========================================== */
+
+const serverStatus =
+    document.getElementById("serverStatus");
+
+serverStatus.textContent =
+    "API READY";
+
+serverStatus.style.color =
+    "#00ffc8";
+
+
+/* ==========================================
+   GET PAIR CODE
+========================================== */
+
+async function getPairCode(){
+
+    const numberInput =
+        document.getElementById("number");
+
+    const button =
+        document.getElementById("pairBtn");
+
+    const resultBox =
+        document.getElementById("resultBox");
+
+    const pairCode =
+        document.getElementById("pairCode");
+
+    const message =
+        document.getElementById("message");
+
+
+    /* Get number */
+
+    let number =
+        numberInput.value.trim();
+
+
+    /* Remove spaces */
+
+    number =
+        number.replace(/\s+/g,"");
+
+
+    /* Remove + */
+
+    if(number.startsWith("+")){
+        number =
+            number.substring(1);
+    }
+
+
+    /* Validation */
+
+    if(!number){
+
+        alert(
+            "Please enter your WhatsApp number."
+        );
+
+        numberInput.focus();
+
+        return;
+    }
+
+
+    if(!/^[0-9]+$/.test(number)){
+
+        alert(
+            "Please enter numbers only."
+        );
+
+        numberInput.focus();
+
+        return;
+    }
+
+
+    if(
+        number.length < 10 ||
+        number.length > 15
+    ){
+
+        alert(
+            "Please enter a valid WhatsApp number."
+        );
+
+        return;
+    }
+
+
+    /* Loading */
+
+    button.disabled = true;
+
+    button.textContent =
+        "GENERATING...";
+
+    resultBox.style.display =
+        "block";
+
+    pairCode.textContent =
+        "WAIT...";
+
+    pairCode.classList.add(
+        "loading"
+    );
+
+    message.textContent =
+        "Connecting to SHAN server...";
+
+    message.style.color =
+        "#91aaa9";
+
+
+    try{
+
+        /*
+        ======================================
+        IMPORTANT
+
+        Server route:
+
+        POST /api/web/pair
+
+        Body:
+
+        {
+            phoneNumber: number
+        }
+        ======================================
+        */
+
+
+        const response =
+            await fetch(
+                `${BOT_API_URL}/api/web/pair`,
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json",
+
+                        "Accept":
+                            "application/json"
+                    },
+
+                    body:JSON.stringify({
+                        phoneNumber:number
+                    })
+                }
+            );
+
+
+        console.log(
+            "HTTP STATUS:",
+            response.status
+        );
+
+
+        /* Get response */
+
+        const data =
+            await response.json();
+
+
+        console.log(
+            "PAIR RESPONSE:",
+            data
+        );
+
+
+        /* ==================================
+           SUCCESS + PAIR CODE
+        ================================== */
+
+        if(
+            data.success &&
+            data.pairCode
+        ){
+
+            pairCode.textContent =
+                data.pairCode;
+
+            message.textContent =
+                "Pair code generated successfully.";
+
+            message.style.color =
+                "#00ffc8";
+
+            serverStatus.textContent =
+                "ONLINE";
+
+            serverStatus.style.color =
+                "#00ffc8";
+
+        }
+
+
+        /* ==================================
+           SESSION CREATED
+        ================================== */
+
+        else if(
+            data.success
+        ){
+
+            pairCode.textContent =
+                "WAIT";
+
+            message.textContent =
+                data.message ||
+                "Session created. Waiting for pair code.";
+
+            message.style.color =
+                "#ffd166";
+
+            serverStatus.textContent =
+                "ONLINE";
+
+            serverStatus.style.color =
+                "#00ffc8";
+
+        }
+
+
+        /* ==================================
+           SERVER ERROR
+        ================================== */
+
+        else{
+
+            pairCode.textContent =
+                "FAILED";
+
+            message.textContent =
+                data.message ||
+                data.error ||
+                "Pair code generation failed.";
+
+            message.style.color =
+                "#ff7373";
+
+            serverStatus.textContent =
+                "API ERROR";
+
+            serverStatus.style.color =
+                "#ff7373";
+        }
+
+
+    }
+    catch(error){
+
+        console.error(
+            "PAIR ERROR:",
+            error
+        );
+
+
+        pairCode.textContent =
+            "ERROR";
+
+        message.textContent =
+            "Could not connect to the bot server.";
+
+        message.style.color =
+            "#ff7373";
+
+        serverStatus.textContent =
+            "CONNECTION ERROR";
+
+        serverStatus.style.color =
+            "#ff7373";
+    }
+
+
+    finally{
+
+        pairCode.classList.remove(
+            "loading"
+        );
+
+        button.disabled =
+            false;
+
+        button.textContent =
+            "GET PAIR CODE";
+    }
+}
+
+
+/* ==========================================
+   ENTER KEY SUPPORT
+========================================== */
+
+document
+    .getElementById("number")
+    .addEventListener(
+        "keydown",
+        function(event){
+
+            if(
+                event.key === "Enter"
+            ){
+
+                getPairCode();
+
+            }
+
+        }
+    );
+
+</script>
+
+</body>
+</html>
